@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>アラーム一覧</title>
+</head>
+<body>
+  <h1>アラーム一覧</h1>
+  <ul>
+    <% @alarms.each do |alarm| %>
+      <li>
+        <%= alarm.alarm_time.strftime('%Y-%m-%d %H:%M') %> - <%= alarm.comment %>
+        <a href="<%= alarm_path(alarm) %>">セット</a>
+      </li>
+    <% end %>
+  </ul>
+  <a href="<%= new_alarm_path %>">新しいアラームを追加</a>
+</body>
+</html>
+
+<script id="alarmData" type="application/json">
+  <%= @alarms.map { |alarm| { id: alarm.id, time: alarm.alarm_time.iso8601, comment: alarm.comment } }.to_json.html_safe %>
+</script>
+<script src="/assets/alarms.js"></script>
+
+

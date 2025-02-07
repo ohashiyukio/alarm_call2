@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>アラーム設定</title>
+</head>
+<body>
+  <h1>アラームを設定</h1>
+  <%= form_with model: @alarm, local: true do |f| %>
+    <div>
+      <%= f.label :alarm_time, "日時" %>
+      <%= f.datetime_local_field :alarm_time %>
+    </div>
+    <div>
+      <%= f.label :comment, "コメント" %>
+      <%= f.text_field :comment %>
+    </div>
+    <div>
+      <%= f.submit "保存" %>
+    </div>
+  <% end %>
+  <a href="<%= alarms_path %>">戻る</a>
+</body>
+</html>

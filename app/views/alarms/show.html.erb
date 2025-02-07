@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>アラーム</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const msg = new SpeechSynthesisUtterance("<%= @alarm.comment %>");
+      const stopButton = document.getElementById("stopAlarm");
+
+      function playAudio() {
+        speechSynthesis.speak(msg);
+      }
+
+      function stopAudio() {
+        speechSynthesis.cancel();
+      }
+
+      playAudio();
+
+      stopButton.addEventListener("click", stopAudio);
+    });
+  </script>
+</head>
+<body>
+  <h1>アラーム</h1>
+  <p><%= @alarm.alarm_time.strftime('%Y-%m-%d %H:%M') %> - <%= @alarm.comment %></p>
+  <button id="stopAlarm">ストップ</button>
+  <a href="<%= alarms_path %>">戻る</a>
+</body>
+</html>
