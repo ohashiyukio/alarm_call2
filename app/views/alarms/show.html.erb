@@ -3,24 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <title>アラーム</title>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const msg = new SpeechSynthesisUtterance("<%= @alarm.comment %>");
-      const stopButton = document.getElementById("stopAlarm");
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const msg = new SpeechSynthesisUtterance("<%= @alarm.comment %>");
+    console.log("読み上げ準備完了:", "<%= @alarm.comment %>");
 
-      function playAudio() {
-        speechSynthesis.speak(msg);
-      }
-
-      function stopAudio() {
-        speechSynthesis.cancel();
-      }
-
-      playAudio();
-
-      stopButton.addEventListener("click", stopAudio);
+    // 再生テスト用（クリックで音声が出るかチェック）
+    document.body.addEventListener("click", function() {
+      speechSynthesis.speak(msg);
+      console.log("クリックで音声を再生");
     });
-  </script>
+
+    // 自動で音声を再生
+    speechSynthesis.speak(msg);
+  });
+</script>
+
 </head>
 <body>
   <h1>アラーム</h1>
