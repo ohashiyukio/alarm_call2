@@ -2,25 +2,56 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>アラーム一覧</title>
 </head>
 <body>
   <h1>アラーム一覧</h1>
-  <ul>
+  <div id="alarmList">
     <% @alarms.each do |alarm| %>
-      <li>
-        <%= alarm.alarm_time.strftime('%Y-%m-%d %H:%M') %> - <%= alarm.comment %>
-        <a href="<%= alarm_path(alarm) %>">セット</a>
-      </li>
+      <div class="alarm-item">
+        <span><%= alarm.alarm_time.strftime('%Y-%m-%d %H:%M') %> - <%= alarm.comment %></span>
+      </div>
     <% end %>
-  </ul>
-  <a href="<%= new_alarm_path %>">新しいアラームを追加</a>
+  </div>
+  <button onclick="location.href='<%= new_alarm_path %>'">新しいアラームを追加</button>
+
+  <script>
+    console.log("JavaScriptがロードされました。");
+
+    const alarms = <%= @alarms.map { |alarm| {
+      id: alarm.id,
+      time: alarm.alarm_time.iso8601,
+      comment: alarm.comment
+    } }.to_json.html_safe %>;
+
+    console.log("アラームデータ:", alarms);
+
+    function checkAlarms() {
+      const now = new Date();
+      console.log("現在時刻:", now.toISOString());
+
+      alarms.forEach(alarm => {
+        const alarmTime = new Date(alarm.time);
+        console.log("チェック中アラーム:", alarmTime.toISOString(), alarm.comment);
+
+        if (now.getFullYear() === alarmTime.getFullYear() &&
+            now.getMonth() === alarmTime.getMonth() &&
+            now.getDate() === alarmTime.getDate() &&
+            now.getHours() === alarmTime.getHours() &&
+            now.getMinutes() === alarmTime.getMinutes()) {
+          console.log("アラームが鳴ります:", alarm.comment);
+          
+          // **直接アラームを再生する**
+          const msg = new SpeechSynthesisUtterance(alarm.comment);
+          speechSynthesis.speak(msg);
+          
+          // **リダイレクトせずにアラームを再生**
+        }
+      });
+    }
+
+    setInterval(checkAlarms, 10000); // 10秒ごとにチェック
+  </script>
 </body>
 </html>
-
-<script id="alarmData" type="application/json">
-  <%= @alarms.map { |alarm| { id: alarm.id, time: alarm.alarm_time.iso8601, comment: alarm.comment } }.to_json.html_safe %>
-</script>
-<script src="/assets/alarms.js"></script>
-
-

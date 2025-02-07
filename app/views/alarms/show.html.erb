@@ -2,28 +2,39 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>アラーム</title>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const msg = new SpeechSynthesisUtterance("<%= @alarm.comment %>");
-    console.log("読み上げ準備完了:", "<%= @alarm.comment %>");
-
-    // 再生テスト用（クリックで音声が出るかチェック）
-    document.body.addEventListener("click", function() {
-      speechSynthesis.speak(msg);
-      console.log("クリックで音声を再生");
-    });
-
-    // 自動で音声を再生
-    speechSynthesis.speak(msg);
-  });
-</script>
-
 </head>
 <body>
   <h1>アラーム</h1>
-  <p><%= @alarm.alarm_time.strftime('%Y-%m-%d %H:%M') %> - <%= @alarm.comment %></p>
+  <p>設定された時間: <%= @alarm.alarm_time.strftime('%Y-%m-%d %H:%M') %></p>
+  <p>コメント: <%= @alarm.comment %></p>
+
+  <button id="playAlarm">再生</button>
   <button id="stopAlarm">ストップ</button>
-  <a href="<%= alarms_path %>">戻る</a>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      console.log("アラームページがロードされました"); // ← **ログ確認**
+      console.log("読み上げ対象のコメント:", "<%= @alarm.comment %>");
+
+      const msg = new SpeechSynthesisUtterance("<%= @alarm.comment %>");
+      const playButton = document.getElementById("playAlarm");
+      const stopButton = document.getElementById("stopAlarm");
+
+      function playAudio() {
+        console.log("音声再生開始"); // ← **ログ確認**
+        speechSynthesis.speak(msg);
+      }
+
+      function stopAudio() {
+        console.log("音声再生停止"); // ← **ログ確認**
+        speechSynthesis.cancel();
+      }
+
+      playButton.addEventListener("click", playAudio);
+      stopButton.addEventListener("click", stopAudio);
+    });
+  </script>
 </body>
 </html>
